@@ -40,7 +40,7 @@ server.get("/token", async () => {
     },
     body: JSON.stringify({
       model: "gpt-4o-realtime-preview-2024-12-17",
-      voice: "echo",
+      voice: "echo",//"nova",
     }),
   });
   console.log(r)
@@ -53,4 +53,6 @@ server.get("/token", async () => {
   });
 });
 
-await server.listen({ port: process.env.PORT || 3000 });
+console.log("***")
+//await server.listen({ host: '0.0.0.0',  port: process.env.PORT || 3000 });
+await server.listen({port: process.env.PORT || 3000 });

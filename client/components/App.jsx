@@ -13,10 +13,13 @@ export default function App() {
 
   async function startSession() {
     // Get an ephemeral key from the Fastify server
+    console.log("******")
     const tokenResponse = await fetch("/token");
+    console.log("#######")
     const data = await tokenResponse.json();
     const EPHEMERAL_KEY = data.client_secret.value;
-
+    console.log(tokenResponse)
+    console.log(EPHEMERAL_KEY)
     // Create a peer connection
     const pc = new RTCPeerConnection();
 

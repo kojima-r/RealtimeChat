@@ -79,7 +79,7 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
         icon={<MessageSquare height={16} />}
         className="bg-blue-400"
       >
-        send text
+        interrupting prompt
       </Button>
       <Button
         onClick={() => {
@@ -88,7 +88,7 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
         icon={<MessageSquare height={16} />}
         className="bg-blue-400"
       >
-        init response
+        preset prompt
       </Button>
       <Button onClick={stopSession} icon={<CloudOff height={16} />}>
         disconnect
