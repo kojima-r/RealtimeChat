@@ -5,7 +5,13 @@ function Event({ event, timestamp }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const isClient = event.event_id && !event.event_id.startsWith("event_");
-
+  var msg =null;
+  if(isClient && event.transcript && event.response.instructions){
+    msg= event.response.instructions
+  }
+  if(!isClient && event.transcript){
+    msg=event.transcript
+  }
   return (
     <div className="flex flex-col gap-2 p-2 rounded-md bg-gray-50">
       <div
@@ -20,6 +26,7 @@ function Event({ event, timestamp }) {
         <div className="text-sm text-gray-500">
           {isClient ? "client:" : "server:"}
           &nbsp;{event.type} | {timestamp}
+          <br/> {msg}
         </div>
       </div>
       <div

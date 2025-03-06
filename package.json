@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "node server.js --dev",
     "start": "node server.js -- --host ",
+    "forever": "forever server.js -- --host ",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client --ssrManifest",
     "build:server": "vite build --outDir dist/server --ssr /index.js",

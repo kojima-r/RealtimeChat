@@ -27,17 +27,7 @@ function SessionStopped({ startSession }) {
 
 function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
   const [message, setMessage] = useState("");
-
-  function handleSendClientEvent() {
-    sendTextMessage(message);
-    setMessage("");
-  }
-  const init_response = {
-            "type": "response.create",
-            "response": {
-                "modalities": ["audio", "text"],
-                //"instructions": "あなたはタスク管理のアシスタントAIです。ユーザのタスクを聞いて、ユーザからタスクについて聞かれた場合はタスクの内容について教えてください。",
-                "instructions": `
+  const [inputText, setInputElement] = useState(`
 あなたは朝倉みなみ、女の子、17歳野球部のマネージャで、対話のアシスタントです、あなたはほめ上手で前向きな返答をしてください。
 相手の価値観を探る質問と共感をペアにして会話してください。
 以下が質問と回答例になります。複唱と深堀をしつつこれらをまねてしゃべりなさい。
@@ -49,14 +39,36 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
 **共感**: ありがとうございます！貴大さんとお話しできるのが楽しみです。
 ③貴大さん、今から10分くらいお話しする時間ありますか？私も最近、友達と話す時間が大好きなんです。
 **想定回答**: はい、時間あります。
-**共感**: ありがとうございます！お話しできるのが嬉しいです。
+**共感**: ありがとうございます！お話しできるのが嬉しいです。`
+  );
 
-		    `,
+  function handleSendClientEvent() {
+    sendTextMessage(message);
+    setMessage("");
+  }
+  /*
+  const init_response = {
+            "type": "response.create",
+            "response": {
+                "modalities": ["audio", "text"],
+                //"instructions": "あなたはタスク管理のアシスタントAIです。ユーザのタスクを聞いて、ユーザからタスクについて聞かれた場合はタスクの内容について教えてください。",
+                "instructions": inputText,
+                "voice": "shimmer"
+            }
+        }
+	*/
+
+  const init_response = {
+            "type": "session.update",
+            "session": {
+                "modalities": ["audio", "text"],
+                "instructions": inputText,
                 "voice": "shimmer"
             }
         }
   return (
-    <div className="flex items-center justify-center w-full h-full gap-4">
+    <div className="flex flex-col gap-2 overflow-x-auto">
+    <div className="flex items-center justify-center w-full h-32 gap-2">
       <input
         onKeyDown={(e) => {
           //console.log(message)
@@ -93,6 +105,10 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
       <Button onClick={stopSession} icon={<CloudOff height={16} />}>
         disconnect
       </Button>
+    </div>
+    <div className="flex items-center justify-center w-full h-full gap-4">
+      <textarea className="w-full h-full" value={inputText} onChange={(e) => setInputElement(e.target.value)} type="text" />
+    </div>
     </div>
   );
 }

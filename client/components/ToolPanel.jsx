@@ -34,6 +34,10 @@ const sessionUpdate = {
       },
     ],
     tool_choice: "auto",
+    input_audio_transcription: {
+      model: "whisper-1",
+      language: "ja",
+    },
   },
 };
 
