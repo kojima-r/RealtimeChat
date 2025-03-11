@@ -1,13 +1,13 @@
-# OpenAI Realtime Console
+# RealtimeChat based on OpenAI Realtime Console
 
-This is an example application showing how to use the [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime) with [WebRTC](https://platform.openai.com/docs/guides/realtime-webrtc).
+This is a prototype real-time chat system using [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime) and [WebRTC](https://platform.openai.com/docs/guides/realtime-webrtc).
 
-## Installation and usage
+## Installation
 
-Before you begin, you'll need an OpenAI API key - [create one in the dashboard here](https://platform.openai.com/settings/api-keys). Create a `.env` file from the example file and set your API key in there:
+Before you begin, you'll need an OpenAI API key - [create one in the dashboard here](https://platform.openai.com/settings/api-keys). Create a `.env` file to set your OpenAI API key in there:
 
 ```bash
-cp .env.example .env
+echo "OPENAI_API_KEY=<....>" > .env
 ```
 
 Running this application locally requires [Node.js](https://nodejs.org/) to be installed. Install dependencies for the application with:
@@ -26,9 +26,7 @@ This should start the console application on [http://localhost:3000](http://loca
 
 _Note:_ The `server.js` file uses [@fastify/vite](https://fastify-vite.dev/) to build and serve the React frontend contained in the [`/client`](./client) folder. You can find the configuration in the [`vite.config.js`](./vite.config.js) file.
 
-## Previous WebSockets version
-
-The previous version of this application that used WebSockets on the client (not recommended in client-side browsers) [can be found here](https://github.com/openai/openai-realtime-console/tree/websockets).
+_Note:_ https access is required to turn on the microphone in a non-local environment.
 
 ## License
 
