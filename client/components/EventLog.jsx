@@ -1,17 +1,10 @@
 import { ArrowUp, ArrowDown } from "react-feather";
 import { useState } from "react";
 
-function Event({ event, timestamp }) {
+function Event({ event,msg,isClient, timestamp }) {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const isClient = event.event_id && !event.event_id.startsWith("event_");
-  var msg =null;
-  if(isClient && event.transcript && event.response.instructions){
-    msg= event.response.instructions
-  }
-  if(!isClient && event.transcript){
-    msg=event.transcript
-  }
+  
+  
   return (
     <div className="flex flex-col gap-2 p-2 rounded-md bg-gray-50">
       <div
@@ -42,6 +35,7 @@ function Event({ event, timestamp }) {
 
 export default function EventLog({ events }) {
   const eventsToDisplay = [];
+  const messages = [];
   let deltaEvents = {};
   //console.log(events)
   events.forEach((event) => {
@@ -53,11 +47,22 @@ export default function EventLog({ events }) {
         deltaEvents[event.type] = event;
       }
     }
-
+    /////
+    const isClient = event.event_id && !event.event_id.startsWith("event_");
+    var msg =null;
+    if(isClient && event.transcript && event.response.instructions){
+      msg= event.response.instructions
+    }
+    if(!isClient && event.transcript){
+      msg=event.transcript
+    }
+    ////
     eventsToDisplay.push(
       <Event
         key={event.event_id}
         event={event}
+        msg={msg}
+        isClient={isClient}
         timestamp={new Date().toLocaleTimeString()}
       />,
     );
@@ -73,3 +78,5 @@ export default function EventLog({ events }) {
     </div>
   );
 }
+
+

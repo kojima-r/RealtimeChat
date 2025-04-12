@@ -99,7 +99,7 @@ export default function ToolPanel({
           output.type === "function_call" &&
           output.name === "display_tasks"
         ) {
-          console.log(output);
+          //console.log(output);
           setFunctionCallOutput(output);
           setTimeout(() => {
             sendClientEvent({
@@ -143,7 +143,7 @@ export default function ToolPanel({
 	  msg= ( <p>Start the session to use this tool...</p> );
 	}
 	
-        console.log(tasks);
+        //console.log(tasks);
         //const tasksToDisplay=[]
         //tasks.forEach((msg) => {
 	//	tasksToDisplay.push(msg)
@@ -151,7 +151,7 @@ export default function ToolPanel({
         //console.log(tasksToDisplay);
 
   return (
-    <section className="h-full w-full flex flex-col gap-4">
+    <section className="h-[50%] w-full flex flex-col gap-4">
       <div className="h-full bg-gray-50 rounded-md p-4">
         <h2 className="text-lg font-bold">Task list</h2>
         {tasks}
