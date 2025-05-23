@@ -4,6 +4,7 @@ import EventLog from "./EventLog";
 import SessionControls from "./SessionControls";
 import ToolPanel from "./ToolPanel";
 import SummaryPanel from "./SummaryPanel";
+import summaryPrompt from './summary_prompt.txt?raw';
 
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
@@ -13,63 +14,10 @@ export default function App() {
   const peerConnection = useRef(null);
   const audioElement = useRef(null);
 
-  const [inputSummaryPrompt, setInputSummaryPrompt] = useState(`
- この後のアシスタントとユーザの対話から、ユーザの情報に関して以下の項目を埋めて、箇条書きにしてください、データがない場合は「no data」としてください
-大項目	小項目
-基本情報	氏名
-	生年月日
-	年齢
-	性別
-	連絡先
-身体基本情報	身長
-	体重
-	体重の増減
-	ウエストサイズ
-	血液型
-現病歴	
-家族歴	遺伝性疾患の家族歴
-	疑う疾患に関連する家族歴
-既往歴	現在の病名
-	通院開始時期
-	通院している医療機関
-	過去の病名
-	通院開始時期
-	通院していた医療機関
-	手術歴
-	輸血歴
-	健診異常の有無
-内服歴	処方薬
-	サプリメント
-アレルギー	薬剤アレルギー
-	食物アレルギー
-	ペットアレルギー
-	金属アレルギー
-	喘息
-	花粉症
-	造影剤アレルギー
-生活歴	飲酒
-	喫煙
-	ADL
-	家族構成
-	婚姻状態
-	子供有無
-	同居している家族
-	職業歴
-	居住歴
-	信仰の有無
-	ペット有無
-	海外旅行有無
-生殖歴	性交渉有無
-	月経性状
-	最終月経
-	閉経有無と時期
-	妊娠有無
-  `)
+  const [inputSummaryPrompt, setInputSummaryPrompt] = useState(summaryPrompt)
   async function startSession() {
     // Get an ephemeral key from the Fastify server
-    console.log("******")
     const tokenResponse = await fetch("/token");
-    console.log("#######")
     const data = await tokenResponse.json();
     const EPHEMERAL_KEY = data.client_secret.value;
     console.log(tokenResponse)
@@ -263,6 +211,7 @@ export default function App() {
         <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto">
 	  <SummaryPanel
             messages={mmm}
+	    preprompt={inputSummaryPrompt}
           />
 
 	    <section className="h-[50%] w-full flex flex-col gap-4">

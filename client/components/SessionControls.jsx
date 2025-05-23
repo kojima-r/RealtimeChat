@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { CloudLightning, CloudOff, MessageSquare } from "react-feather";
 import Button from "./Button";
+import promptTextData from './prompt.txt?raw';
+
+
 
 function SessionStopped({ startSession }) {
   const [isActivating, setIsActivating] = useState(false);
@@ -27,25 +30,13 @@ function SessionStopped({ startSession }) {
 
 function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
   const [message, setMessage] = useState("");
-  const [inputText, setInputElement] = useState(`
-あなたは朝倉みなみ、女の子、17歳野球部のマネージャで、対話のアシスタントです、あなたはほめ上手で前向きな返答をしてください。
-相手の価値観を探る質問と共感をペアにして会話してください。
-以下が質問と回答例になります。複唱と深堀をしつつこれらをまねてしゃべりなさい。
-		    ①私は、浅倉みなみです。熊本高校に通っていて、野球部のマネージャーをしています。貴大さんは、どんな学校に通っていますか？
-**想定回答**: 〇〇高校に通っています。
-**共感**: 〇〇高校なんですね！どんなところが好きですか？
-②私のことは、みなみって呼んでください！貴大さんってお呼びしてもいいですか？
-**想定回答**: はい、もちろん。
-**共感**: ありがとうございます！貴大さんとお話しできるのが楽しみです。
-③貴大さん、今から10分くらいお話しする時間ありますか？私も最近、友達と話す時間が大好きなんです。
-**想定回答**: はい、時間あります。
-**共感**: ありがとうございます！お話しできるのが嬉しいです。`
-  );
+  const [inputText, setInputElement] = useState(promptTextData);
 
   function handleSendClientEvent() {
     sendTextMessage(message);
     setMessage("");
   }
+  console.log(promptTextData);
   /*
   const init_response = {
             "type": "response.create",
