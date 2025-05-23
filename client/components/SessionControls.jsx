@@ -31,24 +31,13 @@ function SessionStopped({ startSession }) {
 function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
   const [message, setMessage] = useState("");
   const [inputText, setInputElement] = useState(promptTextData);
+  const [isActivating, setIsActivating] = useState(false);
 
   function handleSendClientEvent() {
     sendTextMessage(message);
     setMessage("");
   }
   console.log(promptTextData);
-  /*
-  const init_response = {
-            "type": "response.create",
-            "response": {
-                "modalities": ["audio", "text"],
-                //"instructions": "あなたはタスク管理のアシスタントAIです。ユーザのタスクを聞いて、ユーザからタスクについて聞かれた場合はタスクの内容について教えてください。",
-                "instructions": inputText,
-                "voice": "shimmer"
-            }
-        }
-	*/
-
   const init_response = {
             "type": "session.update",
             "session": {
@@ -61,6 +50,12 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
                 },
             }
         }
+  function handleStartSession() {
+    if (isActivating) return;
+    setIsActivating(true);
+    sendClientEvent(init_response);
+  }
+  handleStartSession()
   return (
     <div className="flex flex-col gap-2 overflow-x-auto">
     <div className="flex items-center justify-center w-full h-32 gap-2">

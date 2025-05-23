@@ -26,7 +26,7 @@ export default function SummaryPanel({
 	
 	let s=completion.choices[0].message.content;
 	//console.log(completion.choices[0].message.content);
-	console.log(msg+"=>"+s);
+	//console.log(msg+"=>"+s);
         setOut(s);
   }
   

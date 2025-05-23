@@ -90,7 +90,6 @@ export default function App() {
   // Send a message to the model
   function sendClientEvent(message) {
     if (dataChannel) {
-      //console.log("---2---")
       message.event_id = message.event_id || crypto.randomUUID();
       dataChannel.send(JSON.stringify(message)); //messageをJsonStringにしてDataChanelから送信
       setEvents((prev) => [message, ...prev]);   //ログに追加
@@ -104,7 +103,6 @@ export default function App() {
 
   // Send a text message to the model
   function sendTextMessage(message) {
-    //console.log("---0---")
     const event = {
       type: "conversation.item.create",
       item: {
@@ -160,15 +158,12 @@ export default function App() {
       // Append new server events to the list
       // message: リモート ピアからメッセージを受信したときに送信されます 
       dataChannel.addEventListener("message", (e) => {
-	//console.log("+++1+++")
         setEvents((prev) => [JSON.parse(e.data), ...prev]); //prevの前にe.dataのjsonオブジェクトを追加
-
       });
 
       // Set session active when the data channel is opened
       // open:  データチャネルが最初に開かれたとき、また再度開かれたときに送信されます。
       dataChannel.addEventListener("open", () => {
-        //console.log("+++0+++")
         setIsSessionActive(true);
         setEvents([]);
       });
@@ -177,8 +172,6 @@ export default function App() {
   //console.log(events)
 
   var mmm=events2messages(events)
-  //console.log(mmm)
-          //<section className="absolute top-0 left-0 right-0 bottom-[50%] px-4 overflow-y-auto">
   return (
     <>
       <nav className="absolute top-0 left-0 right-0 h-16 flex items-center">
