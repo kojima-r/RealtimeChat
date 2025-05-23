@@ -63,7 +63,11 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
             "session": {
                 "modalities": ["audio", "text"],
                 "instructions": inputText,
-                "voice": "shimmer"
+		"voice": "shimmer",
+                "input_audio_transcription": {
+                      "model": "whisper-1",
+                      "language": "ja",
+                },
             }
         }
   return (

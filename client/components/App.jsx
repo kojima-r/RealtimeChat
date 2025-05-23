@@ -243,9 +243,9 @@ export default function App() {
         <section className="absolute top-0 left-0 right-[380px] bottom-0 flex">
           <section className="absolute top-0 left-0 right-0 bottom-[50%] flex overflow-y-auto">
 		  <section className="w-[100%] top-0 left-0 right-0 bottom-0 px-4">
-		    <img style={{ width: "100%" }} src="/assets/openai-logomark.svg" />
+		    <img style={{ width: "100%" }} src="/assets/face01.jpg" />
 		  </section><br />
-		  <section className="w-[100%] h-0 top-0 left-0 right-0 bottom-0 px-4 invisible">
+		  <section className="w-[100%] h-0 top-0 left-0 right-0 bottom-0 px-4">
 		    <EventLog events={events}/>
 		  </section>
 	  </section>
