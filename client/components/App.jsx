@@ -181,11 +181,15 @@ export default function App() {
     if(messageLen<mmm.length){
         setMessageLen(mmm.length)
         console.log(mmm[0])
-   	setFace("/assets/03_talk.gif")
-	setTimeout(() => {
-           setFace("/assets/02_eye.gif");
-        }, 3000);
+
+        if(mmm[0].startsWith("アシスタント")){
+            var tt=mmm[0].length
+   	    setFace("/assets/03_talk.gif")
+            setTimeout(() => {
+              setFace("/assets/02_eye.gif");
+            }, 100*tt);
         console.log(">>>","/assets/03_talk.gif")
+	}
         //console.log(">>>","/assets/03_talk.gif")
 	//
     }
