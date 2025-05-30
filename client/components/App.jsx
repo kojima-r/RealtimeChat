@@ -184,7 +184,12 @@ export default function App() {
 
         if(mmm[0].startsWith("アシスタント")){
             var tt=mmm[0].length
-   	    setFace("/assets/03_talk.gif")
+            const rand_flag = Math.random() < 0.2;
+	    if(rand_flag){
+   	      setFace("/assets/03_talk.gif");
+	    }else{
+   	      setFace("/assets/05_handTalk.gif")
+	    }
             setTimeout(() => {
               setFace("/assets/02_eye.gif");
             }, 100*tt);
