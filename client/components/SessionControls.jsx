@@ -16,7 +16,7 @@ function SessionStopped({ startSession }) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div className="flex items-left justify-center w-[50%] h-full">
       <Button
         onClick={handleStartSession}
         className={isActivating ? "bg-gray-600" : "bg-red-600"}
@@ -28,7 +28,7 @@ function SessionStopped({ startSession }) {
   );
 }
 
-function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
+function SessionActive({ stopSession, sendTextMessage, sendClientEvent, visible}) {
   const [message, setMessage] = useState("");
   const [inputText, setInputElement] = useState(promptTextData);
   const [isActivating, setIsActivating] = useState(false);
@@ -37,6 +37,7 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
     sendTextMessage(message);
     setMessage("");
   }
+  //console.log(promptTextData);
   const init_response = {
             "type": "session.update",
             "session": {
@@ -57,6 +58,12 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
   useEffect(() => {
     handleStartSession();
   });
+  if(!visible){
+  	return (
+		<div>
+		</div>
+	);
+  }
   return (
     <div className="flex flex-col gap-2 overflow-x-auto">
     <div className="flex items-center justify-center w-full h-32 gap-2">
@@ -111,15 +118,17 @@ export default function SessionControls({
   sendTextMessage,
   serverEvents,
   isSessionActive,
+  visible,
 }) {
   return (
-    <div className="flex gap-4 border-t-2 border-gray-200 h-full rounded-md">
+    <div>
       {isSessionActive ? (
         <SessionActive
           stopSession={stopSession}
           sendClientEvent={sendClientEvent}
           sendTextMessage={sendTextMessage}
           serverEvents={serverEvents}
+          visible={visible}
         />
       ) : (
         <SessionStopped startSession={startSession} />

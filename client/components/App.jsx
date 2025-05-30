@@ -9,8 +9,10 @@ import summaryPrompt from './summary_prompt.txt?raw';
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [events, setEvents] = useState([]);
-  const [dataChannel, setDataChannel] = useState(null); //RTCDataChannel
   const [messages, setMessages] = useState([]);
+  const [messageLen, setMessageLen] = useState(0);
+  const [dataChannel, setDataChannel] = useState(null); //RTCDataChannel
+  const [face, setFace] = useState("/assets/02_eye.gif");
   const peerConnection = useRef(null);
   const audioElement = useRef(null);
 
@@ -149,6 +151,7 @@ export default function App() {
       if(msg!= null){
      	msgs.push(msg)
       }
+
     });
     ////
     return msgs
@@ -172,24 +175,36 @@ export default function App() {
     }
   }, [dataChannel]);
   //console.log(events)
-
-  var mmm=events2messages(events)
+  useEffect(() => {
+    var mmm=events2messages(events)
+    setMessages(mmm)
+    if(messageLen<mmm.length){
+        setMessageLen(mmm.length)
+        console.log(mmm[0])
+   	setFace("/assets/03_talk.gif")
+	setTimeout(() => {
+           setFace("/assets/02_eye.gif");
+        }, 3000);
+        console.log(">>>","/assets/03_talk.gif")
+        //console.log(">>>","/assets/03_talk.gif")
+	//
+    }
+  }, [events]);
   return (
     <>
-      <nav className="absolute top-0 left-0 right-0 h-16 flex items-center">
-        <div className="flex items-center gap-4 w-full m-4 pb-2 border-0 border-b border-solid border-gray-200">
-          <img style={{ width: "24px" }} src={logo} />
-          <h1>realtime console</h1>
-        </div>
-      </nav>
       <main className="absolute top-16 left-0 right-0 bottom-0">
         <section className="absolute top-0 left-0 right-[380px] bottom-0 flex">
-          <section className="absolute top-0 left-0 right-0 bottom-[50%] flex overflow-y-auto">
+          <section className="absolute top-0 left-0 right-0 bottom-[0%] flex overflow-y-auto">
+		  <section className="w-[100%] top-0 left-0 right-0 bottom-0 px-4">
+		    <img style={{ width: "100%" }} src={face} />
+		  </section><br />
 		  <section className="w-[100%] h-0 top-0 left-0 right-0 bottom-0 px-4">
-		    <EventLog events={events}/>
+		    <EventLog events={events}
+	                      visible={false}
+	            />
 		  </section>
 	  </section>
-          <section className="absolute h-[50%] left-0 right-0 bottom-0 p-4">
+          <section className="absolute h-[90%] left-0 right-0 bottom-0 px-0">
             <SessionControls
               startSession={startSession}
               stopSession={stopSession}
@@ -197,12 +212,13 @@ export default function App() {
               sendTextMessage={sendTextMessage}
               events={events}
               isSessionActive={isSessionActive}
+	      visible={false}
             />
           </section>
         </section>
-        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto">
+        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto invisible">
 	  <SummaryPanel
-            messages={mmm}
+            messages={messages}
 	    preprompt={inputSummaryPrompt}
           />
 
@@ -227,5 +243,8 @@ export default function App() {
             events={events}
             isSessionActive={isSessionActive}
           />
+
+	  </section>
+          <section className="absolute h-[50%] left-0 right-0 bottom-0 p-4">
 	  */
 
