@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CloudLightning, CloudOff, MessageSquare } from "react-feather";
 import Button from "./Button";
 import promptTextData from './prompt.txt?raw';
@@ -37,7 +37,6 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
     sendTextMessage(message);
     setMessage("");
   }
-  console.log(promptTextData);
   const init_response = {
             "type": "session.update",
             "session": {
@@ -55,7 +54,9 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent }) {
     setIsActivating(true);
     sendClientEvent(init_response);
   }
-  handleStartSession()
+  useEffect(() => {
+    handleStartSession();
+  });
   return (
     <div className="flex flex-col gap-2 overflow-x-auto">
     <div className="flex items-center justify-center w-full h-32 gap-2">

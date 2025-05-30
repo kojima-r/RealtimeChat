@@ -137,12 +137,14 @@ export default function App() {
       /////
       const isClient = event.event_id && !event.event_id.startsWith("event_");
       var msg =null;
-      if(isClient && event.transcript && event.response.instructions){
-        msg= "アシスタント「"+event.response.instructions+"」"
-
+      //if(isClient && event.transcript && event.response.instructions){
+      if(event.transcript && event.type.startsWith("response.audio_transcript")){
+	const s = event.transcript
+        msg= "アシスタント「"+s.replace(/[\r\n]+/g, '')+"」\n"
       }
-      if(!isClient && event.transcript){
-        msg="ユーザ「"+event.transcript+"」"
+      if(event.transcript && event.type.startsWith("conversation.item.input_audio_transcription")){
+        const s =event.transcript
+	msg="ユーザ「"+s.replace(/[\r\n]+/g, '')+"」\n"
       }
       if(msg!= null){
      	msgs.push(msg)
@@ -183,9 +185,6 @@ export default function App() {
       <main className="absolute top-16 left-0 right-0 bottom-0">
         <section className="absolute top-0 left-0 right-[380px] bottom-0 flex">
           <section className="absolute top-0 left-0 right-0 bottom-[50%] flex overflow-y-auto">
-		  <section className="w-[100%] top-0 left-0 right-0 bottom-0 px-4">
-		    <img style={{ width: "100%" }} src="/assets/face01.jpg" />
-		  </section><br />
 		  <section className="w-[100%] h-0 top-0 left-0 right-0 bottom-0 px-4">
 		    <EventLog events={events}/>
 		  </section>
@@ -219,6 +218,9 @@ export default function App() {
   );
 }
 /*
+		  <section className="w-[100%] top-0 left-0 right-0 bottom-0 px-4">
+          <img style={{ width: "100%" }} src="/assets/face01.jpg" />
+		  </section><br />
           <ToolPanel
             sendClientEvent={sendClientEvent}
             sendTextMessage={sendTextMessage}

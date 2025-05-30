@@ -11,6 +11,10 @@ export default function SummaryPanel({
 }) {
   const [out, setOut] = useState("");
   const [len, setLen] = useState(0);
+  const [file, setFile] = useState(null);
+  const [isActivating, setIsActivating] = useState(false);
+  const [lines, setLines] = useState([]);
+
   const summary=messages
 
   const openai = new OpenAI({
@@ -18,6 +22,34 @@ export default function SummaryPanel({
 	  apiKey: import.meta.env["VITE_API_KEY"],
 	  dangerouslyAllowBrowser: true,
   });
+  const handleSubmit = async () => {
+    const host = window.location.hostname;
+    const res = await fetch(`https://${host}/saveText`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        filename: "summary_log",
+        content: out,
+      }),
+    });
+
+    const result = await res.json();
+    console.log(result)
+    //
+    console.log(summary+lines)
+    const res_msg = await fetch(`https://${host}/saveText`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        filename: "message_log",
+        content: summary+lines,
+      }),
+    });
+	
+    const result_msg = await res_msg.json();
+    console.log(result_msg)
+  };
+ 
   async function main(msg) {
 	const completion = await openai.chat.completions.create({
 		messages: [{ role: 'user', content: msg }],
@@ -25,12 +57,35 @@ export default function SummaryPanel({
 	});
 	
 	let s=completion.choices[0].message.content;
-	//console.log(completion.choices[0].message.content);
-	//console.log(msg+"=>"+s);
         setOut(s);
+	handleSubmit();
   }
   
+  useEffect(() => {
+    if(isActivating){
+      return;
+    }
+    setIsActivating(true);
+    const fetchText = async () => {
+      try {
+        const host = window.location.hostname;
+        const res = await fetch(`https://${host}/readText`);
+        const text = await res.text();
 
+        // 改行で分割（Windows/Unix/Mac対応）
+        const linesArray = text.split(/\r\n|\n|\r/).filter(line => line.trim() !== '');
+
+        console.log(linesArray);
+	setLines(linesArray);
+      } catch (error) {
+        console.error('読み込みエラー:', error);
+      }
+    };
+
+    fetchText();
+  }, []);
+  
+  
 
   //setEvents((prev) => [message, ...prev]);   //ログに追加
   // レンダリング後に実行
