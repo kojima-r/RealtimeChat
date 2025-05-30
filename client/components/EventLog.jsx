@@ -33,7 +33,7 @@ function Event({ event,msg,isClient, timestamp }) {
   );
 }
 
-export default function EventLog({ events }) {
+export default function EventLog({ events, visible }) {
   const eventsToDisplay = [];
   const messages = [];
   let deltaEvents = {};
@@ -67,7 +67,12 @@ export default function EventLog({ events }) {
       />,
     );
   });
-
+  if(!visible){
+    return (
+    <div>
+    </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-2 overflow-x-auto">
       {events.length === 0 ? (
