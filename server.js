@@ -65,7 +65,7 @@ server.get("/token", async () => {
 
 // POST /saveText にテキストを保存
 server.post('/saveText', async (req, reply) => {
-  const { filename, content } = req.body;
+  const { filename, content, token } = req.body;
 
   if (!filename || !content) {
     return reply.code(400).send({ status: 'error', message: 'filename and content required' });
@@ -73,11 +73,16 @@ server.post('/saveText', async (req, reply) => {
 
   const safeFilename = path.basename(filename); // パストラバーサル防止
   const filePath = path.join('texts', safeFilename + '.txt');
-
   await fs.ensureDir('texts');
   await fs.writeFile(filePath, content, 'utf8');
 
-  reply.send({ status: 'ok', saved: filePath });
+
+  const logFilename = path.basename(filename); // パストラバーサル防止
+  const logPath = path.join('texts', logFilename +"."+token+ '.txt');
+  await fs.ensureDir('texts');
+  await fs.writeFile(logPath, content, 'utf8');
+
+  reply.send({ status: 'ok', saved: filePath ,log: logPath });
 });
 
 server.get('/readText', async (req, reply) => {

@@ -7,7 +7,7 @@ Call this function when a user asks for a user's task.
 
 
 export default function SummaryPanel({
-  messages, preprompt
+  messages, preprompt, sessionToken
 }) {
   const [out, setOut] = useState("");
   const [len, setLen] = useState(0);
@@ -29,6 +29,7 @@ export default function SummaryPanel({
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         filename: "summary_log",
+        token: sessionToken,
         content: out,
       }),
     });
@@ -42,6 +43,7 @@ export default function SummaryPanel({
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         filename: "message_log",
+        token: sessionToken,
         content: summary+lines,
       }),
     });

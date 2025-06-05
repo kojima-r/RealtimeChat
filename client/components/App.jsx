@@ -9,6 +9,7 @@ import summaryPrompt from './summary_prompt.txt?raw';
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [events, setEvents] = useState([]);
+  const [sessionToken, setSessionToken] = useState("dummy");
   const [messages, setMessages] = useState([]);
   const [messageLen, setMessageLen] = useState(0);
   const [dataChannel, setDataChannel] = useState(null); //RTCDataChannel
@@ -46,7 +47,8 @@ export default function App() {
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
     const baseUrl = "https://api.openai.com/v1/realtime";
-    const model = "gpt-4o-realtime-preview-2024-12-17";
+    //const model = "gpt-4o-realtime-preview-2024-12-17";
+    const model = "gpt-4o-realtime-preview-2025-06-03";
     //console.log("??2??")
     //console.log(offer.sdp)
     //console.log("??2??")
@@ -171,6 +173,13 @@ export default function App() {
       dataChannel.addEventListener("open", () => {
         setIsSessionActive(true);
         setEvents([]);
+	//var s=new Date().toLocaleTimeString());
+	const date=new Date();
+	var s=date.toLocaleDateString()+"_"+date.toLocaleTimeString();
+	s=s.replaceAll("/","_");
+	console.log(s);
+        setSessionToken(s);
+	
       });
     }
   }, [dataChannel]);
@@ -229,6 +238,7 @@ export default function App() {
 	  <SummaryPanel
             messages={messages}
 	    preprompt={inputSummaryPrompt}
+            sessionToken={sessionToken}
           />
 
 	    <section className="h-[50%] w-full flex flex-col gap-4">

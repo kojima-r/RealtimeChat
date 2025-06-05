@@ -22,7 +22,7 @@ function SessionStopped({ startSession }) {
         className={isActivating ? "bg-gray-600" : "bg-red-600"}
         icon={<CloudLightning height={16} />}
       >
-        {isActivating ? "starting session..." : "start session"}
+        {isActivating ? "starting session..." : "START"}
       </Button>
     </div>
   );
@@ -60,7 +60,10 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent, visible}
   });
   if(!visible){
   	return (
-		<div>
+    <div className="flex items-left justify-center w-[50%] h-full">
+      <Button onClick={stopSession} icon={<CloudOff height={16} />}>
+        STOP
+      </Button>
 		</div>
 	);
   }
