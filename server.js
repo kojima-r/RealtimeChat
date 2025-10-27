@@ -89,9 +89,9 @@ server.get('/readText', async (req, reply) => {
   try {
     const filePath = path.resolve('./texts/message_log.txt');
     const text = await fs.readFile(filePath, 'utf8');
-    // 行に分割（LF/CRLF対応）して最後の100行を取得
+    // 行に分割（LF/CRLF対応）して最後の10行を取得
     const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-    const last = lines.slice(-100);
+    const last = lines.slice(-10);
     
     reply
       .code(200)

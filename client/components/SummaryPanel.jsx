@@ -36,15 +36,17 @@ export default function SummaryPanel({
 
     const result = await res.json();
     console.log(result)
-    //
-    console.log(summary+lines)
+    console.log(summary)
+    console.log(lines)
+    let summary_l =summary.concat(lines);
+    let summary_ls = summary_l.join('\n');
     const res_msg = await fetch(`https://${host}/saveText`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         filename: "message_log",
         token: sessionToken,
-        content: summary+lines,
+        content: summary_ls,
       }),
     });
 	

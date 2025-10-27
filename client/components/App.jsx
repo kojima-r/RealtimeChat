@@ -222,7 +222,7 @@ export default function App() {
 	            />
 		  </section>
 	  </section>
-          <section className="absolute h-[90%] left-0 right-0 bottom-0 px-0">
+          <section className="absolute h-[40%] left-0 right-0 bottom-0 px-0">
             <SessionControls
               startSession={startSession}
               stopSession={stopSession}
@@ -230,11 +230,11 @@ export default function App() {
               sendTextMessage={sendTextMessage}
               events={events}
               isSessionActive={isSessionActive}
-	      visible={false}
+	      visible={true}
             />
           </section>
         </section>
-        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto invisible">
+        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto visible">
 	  <SummaryPanel
             messages={messages}
 	    preprompt={inputSummaryPrompt}
