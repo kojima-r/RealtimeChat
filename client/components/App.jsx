@@ -6,6 +6,11 @@ import ToolPanel from "./ToolPanel";
 import SummaryPanel from "./SummaryPanel";
 import summaryPrompt from './summary_prompt.txt?raw';
 
+//import { Live2DModel } from 'pixi-live2d-display';
+// if only Cubism 4
+//import { Live2DModel } from 'pixi-live2d-display/cubism4';
+
+
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [events, setEvents] = useState([]);
@@ -14,8 +19,11 @@ export default function App() {
   const [messageLen, setMessageLen] = useState(0);
   const [dataChannel, setDataChannel] = useState(null); //RTCDataChannel
   const [face, setFace] = useState("/assets/02_eye.gif");
+  const [ClientLive2D, setClientLive2D] = useState(null);
   const peerConnection = useRef(null);
-  const audioElement = useRef(null);
+  //const audioElement = useRef(null);
+  const [audioElement, setAudioElement] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
 
   const [inputSummaryPrompt, setInputSummaryPrompt] = useState(summaryPrompt)
   async function startSession() {
@@ -27,11 +35,20 @@ export default function App() {
     console.log(EPHEMERAL_KEY)
     // Create a peer connection
     const pc = new RTCPeerConnection();
+    // ★ リモートの音声を受け取るための m=audio を“必ず”用意
+    pc.addTransceiver('audio', { direction: 'recvonly' });
+    // （映像を使わないなら無効化してノイズを減らす）
+    pc.addTransceiver('video', { direction: 'inactive' });
 
     // Set up to play remote audio from the model
-    audioElement.current = document.createElement("audio");
-    audioElement.current.autoplay = true;
-    pc.ontrack = (e) => (audioElement.current.srcObject = e.streams[0]);
+    const audioEl =document.createElement("audio");
+    setAudioElement(audioEl);
+    audioEl.autoplay = true;
+    pc.ontrack = (e) => {
+      console.log('[ontrack]', e.streams[0]);
+      audioEl.srcObject = e.streams[0];
+      setRemoteStream(e.streams[0]);
+    };
 
     // Add local audio track for microphone input in the browser
     const ms = await navigator.mediaDevices.getUserMedia({
@@ -190,7 +207,7 @@ export default function App() {
     if(messageLen<mmm.length){
         setMessageLen(mmm.length)
         console.log(mmm[0])
-
+	/*
         if(mmm[0].startsWith("アシスタント")){
             var tt=mmm[0].length
             const rand_flag = Math.random() < 0.2;
@@ -206,53 +223,66 @@ export default function App() {
 	}
         //console.log(">>>","/assets/03_talk.gif")
 	//
+        */
     }
   }, [events]);
+  useEffect(() => {
+    // ✅ クライアントでだけサブコンポーネントを読み込む
+    import("./Live2DCanvas.jsx").then(m => setClientLive2D(() => m.default));
+  }, []);
+  //   {ClientLive2D ? <ClientLive2D getAudioEl={() => audioElement.current} /> : null}
   return (
     <>
-      <main className="absolute top-16 left-0 right-0 bottom-0">
-        <section className="absolute top-0 left-0 right-[380px] bottom-0 flex">
-          <section className="absolute top-0 left-0 right-0 bottom-[0%] flex overflow-y-auto">
-		  <section className="w-[100%] top-0 left-0 right-0 bottom-0 px-4">
-		    <img style={{ width: "100%" }} src={face} />
-		  </section><br />
-		  <section className="w-[100%] h-0 top-0 left-0 right-0 bottom-0 px-4">
-		    <EventLog events={events}
-	                      visible={false}
+      <main className="absolute top-0 left-0 right-0 bottom-0">
+        <section className="absolute top-0 left-0 right-0 bottom-0 flex">
+          <section className="absolute w-[600px] h-[300px] top-0 left-0 right-0 bottom-0 px-0 flex overflow-y-auto z-50">
+	            <EventLog events={events}
+	                      visible={true}
 	            />
-		  </section>
 	  </section>
-          <section className="absolute h-[40%] left-0 right-0 bottom-0 px-0">
-            <SessionControls
-              startSession={startSession}
-              stopSession={stopSession}
-              sendClientEvent={sendClientEvent}
-              sendTextMessage={sendTextMessage}
-              events={events}
-              isSessionActive={isSessionActive}
-	      visible={true}
-            />
-          </section>
+          <section className="absolute w-[100%] top-0 left-0 right-0 bottom-[0%] flex overflow-y-auto">
+            <section className="absolute w-[1200px] h-[1600px] top-0 left-0 right-0 bottom-0 px-4">
+                  <div>
+                    {ClientLive2D ? <ClientLive2D audioStream={remoteStream} canvasWidth={1200} canvasHeight={1600} left={-100}/> : null}
+		  </div>
+              <section className="absolute w-[70%] h-[40%] left-0 right-0 bottom-0 px-0 bg-opacity-90 opacity-90">
+                <SessionControls
+                  startSession={startSession}
+                  stopSession={stopSession}
+                  sendClientEvent={sendClientEvent}
+                  sendTextMessage={sendTextMessage}
+                  events={events}
+                  isSessionActive={isSessionActive}
+	          visible={true}
+                />
+              </section>
+
+	    </section>
+     	  </section>
         </section>
-        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto visible">
+        <section className="absolute top-0 w-[380px] right-0 bottom-0 p-4 pt-0 overflow-y-auto visible  bg-opacity-90 opacity-90">
 	  <SummaryPanel
             messages={messages}
 	    preprompt={inputSummaryPrompt}
             sessionToken={sessionToken}
           />
 
-	    <section className="h-[50%] w-full flex flex-col gap-4">
-	      <div className="h-full bg-gray-50 rounded-md p-4">
+	  <section className="h-[50%] w-full flex flex-col gap-4">
+	    <div className="h-full bg-gray-50 rounded-md p-4">
 		<h2 className="text-lg font-bold">Summary Prompt</h2>
 		<textarea className="w-full h-[90%]" value={inputSummaryPrompt} type="text" onChange={(e) => setInputSummaryPrompt(e.target.value)} />
-	      </div>
-	    </section>
+	    </div>
+	  </section>
         </section>
       </main>
     </>
   );
 }
 /*
+ *
+		    <img style={{ width: "100%" }} src={face} />
+ *
+ *
 		  <section className="w-[100%] top-0 left-0 right-0 bottom-0 px-4">
           <img style={{ width: "100%" }} src="/assets/face01.jpg" />
 		  </section><br />

@@ -69,7 +69,7 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent, visible}
   }
   return (
     <div className="flex flex-col gap-2 overflow-x-auto">
-    <div className="flex items-center justify-center w-full h-32 gap-2">
+    <div className="flex items-center justify-center w-full h-full gap-4">
       <input
         onKeyDown={(e) => {
           //console.log(message)
@@ -83,6 +83,8 @@ function SessionActive({ stopSession, sendTextMessage, sendClientEvent, visible}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
+    </div>
+    <div className="flex items-center justify-center w-full h-32 gap-2">
       <Button
         onClick={() => {
           if (message.trim()) {

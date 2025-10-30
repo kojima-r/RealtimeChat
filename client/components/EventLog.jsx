@@ -6,9 +6,9 @@ function Event({ event,msg,isClient, timestamp }) {
   
   
   return (
-    <div className="flex flex-col gap-2 p-2 rounded-md bg-gray-50">
+    <div className="flex flex-col gap-1 p-2 rounded-md bg-gray-50 bg-opacity-70 opacity-70">
       <div
-        className="flex items-center gap-2 cursor-pointer"
+        className="flex items-center gap-1 cursor-pointer "
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {isClient ? (
@@ -16,7 +16,7 @@ function Event({ event,msg,isClient, timestamp }) {
         ) : (
           <ArrowUp className="text-green-400" />
         )}
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-500 gap-1">
           {isClient ? "client:" : "server:"}
           &nbsp;{event.type} | {timestamp}
           <br/> {msg}
@@ -74,7 +74,7 @@ export default function EventLog({ events, visible }) {
     );
   }
   return (
-    <div className="flex flex-col gap-2 overflow-x-auto">
+    <div className="flex flex-col gap-1 overflow-x-auto">
       {events.length === 0 ? (
         <div className="text-gray-500">Awaiting events...</div>
       ) : (
